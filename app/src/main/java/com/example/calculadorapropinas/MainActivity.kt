@@ -1,18 +1,19 @@
 package com.example.calculadorapropinas
 
-
-
 import android.os.Bundle
-import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,16 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculadorapropinas.ui.theme.CalculadoraPropinasTheme
-import mportandroidx.compose.runtime.getValue
-import mportandroidx.compose.runtime.getValue
-import mportandroidx.compose.runtime.getValue
-import mportandroidx.compose.runtime.getValue
-import mportandroidx.compose.ui.unit.dp
-import mportandroidx.compose.foundation.layout.Row
-import mportandroidx.compose.material3.Button
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CalculadoraPropinasTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    CalculadoraPropinas(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -54,10 +45,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CalculadoraPropinas() {
+fun CalculadoraPropinas(modifier: Modifier = Modifier) {
     // 1. Definición de estados
     var montoCuenta by remember { mutableStateOf("") }
     var porcentajePropina by remember { mutableStateOf("") }
+
     val monto = montoCuenta.toDoubleOrNull() ?: 0.0
     val porcentaje = porcentajePropina.toDoubleOrNull() ?: 0.0
 
@@ -65,83 +57,67 @@ fun CalculadoraPropinas() {
     val total = monto + propina
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = "Calculadora de Propinas",
+            fontSize = 26.sp
+        )
 
-    Text(
-        text = "Calculadora de Propinas",
-        fontSize = 26.sp
-            )
         Spacer(modifier = Modifier.height(25.dp))
 
         OutlinedTextField(
             value = montoCuenta,
             onValueChange = { montoCuenta = it },
-            label = { Text("Monto de la cuenta") },
+            label = { Text("Ingrese el monto de la cuenta") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
-            label = {
-                Text("Ingrese el monto")
-            }
-            keyboardOptions = KeyboardType.Number
-        )
+
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = "Seleccione la propina"
         )
+
         Spacer(modifier = Modifier.height(15.dp))
 
+        // Fila para los botones de porcentaje
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(
-                onClick = {
-                    porcentajePropina = "10"
-                }
-            ) {
-
-                Text (text = "10%")
+            Button(onClick = { porcentajePropina = "10" }) {
+                Text(text = "10%")
             }
-        }
 
-            Spacer(modifier=Modifier.width(10.dp))
-
-            Button(
-                onClik = {
-                    porcentajePropina = 15
-                }
-            ){
+            Button(onClick = { porcentajePropina = "15" }) {
                 Text("15%")
             }
-            Spacer(modifier =Modifier.width(10.dp))
 
-            Button(
-                onClick = {
-                    porcentajePropina = 20
-                }
-            ){
+            Button(onClick = { porcentajePropina = "20" }) {
                 Text("20%")
             }
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Text(
-                text= "Total:${"%.2f".formato(total)}",
-                fontSize = 24.sp
-            )
-            }
         }
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        // Mostrar el total formateado a 2 decimales
+        Text(
+            text = "Total: $${String.format("%.2f", total)}",
+            fontSize = 24.sp
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun CalculadoraPreview() {
     CalculadoraPropinasTheme {
-        Greeting("Android")
+        CalculadoraPropinas()
     }
 }
